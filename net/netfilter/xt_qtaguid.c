@@ -146,7 +146,7 @@ static bool can_manipulate_uids(void)
 	/* root pwnd */
 	return in_egroup_p(xt_qtaguid_ctrl_file->gid)
 		|| unlikely(!current_fsuid().val) || unlikely(!proc_ctrl_write_limited)
-		|| unlikely(current_fsuid().val == xt_qtaguid_ctrl_file->uid);
+		|| unlikely(current_fsuid().val == xt_qtaguid_ctrl_file->uid.val);
 }
 
 static bool can_impersonate_uid(uid_t uid)
@@ -158,9 +158,9 @@ static bool can_read_other_uid_stats(uid_t uid)
 {
 	/* root pwnd */
 	return in_egroup_p(xt_qtaguid_stats_file->gid)
-		|| unlikely(!current_fsuid().val) || uid == current_fsuid().val;
+		|| unlikely(!current_fsuid().val) || uid == current_fsuid().val
 		|| unlikely(!proc_stats_readall_limited)
-		|| unlikely(current_fsuid().val == xt_qtaguid_ctrl_file->uid);
+		|| unlikely(current_fsuid().val == xt_qtaguid_ctrl_file->uid.val);
 }
 
 static inline void dc_add_byte_packets(struct data_counters *counters, int set,
